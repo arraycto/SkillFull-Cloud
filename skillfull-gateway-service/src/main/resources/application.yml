@@ -1,0 +1,99 @@
+spring:
+  application:
+    name: gateway-service
+    version: @version@
+  jackson:
+    time-zone: Asia/Shanghai
+    date-format: yyyy-MM-dd HH:mm:ss
+  redis:
+    database: ${redis.database:0}
+    host: ${redis.host:localhost}
+    password: ${redis.password:root}
+    port: ${redis.port:6379}
+    timeout: 3000
+    jedis:
+      pool:
+        max-idle: 20
+        max-wait: -1
+        min-idle: 0
+        max-active: 200
+  rabbitmq:
+    host: ${rbmq.host:localhost}
+    port: ${rbmq.port:5672}
+    username: ${rbmq.username:guest}
+    password: ${rbmq.password:guest}
+  cloud:
+    stream:
+      bindings:
+        process_data_log_output:
+          destination: process_data_log
+          group: log_process
+          process_operate_log_output:
+            destination: process_operate_log
+            group: log_process
+        process_router_update_input:
+          destination: process_router_update
+    # 跨域配置
+    gateway:
+      globalcors:
+        corsConfigurations:
+          '[/**]':
+            allowedOrigins: "*"
+            allowedMethods:
+              - GET
+              - POST
+              - PUT
+              - DELETE
+              - OPTION
+
+
+server:
+  port: ${app.server-port}
+  context-path: ${app.context-path:/gateway}
+  servlet:
+    encoding:
+      force: true
+      charset: UTF-8
+      enabled: true
+  undertow:
+    buffer-size: 1024
+    direct-buffers: true
+    threads:
+      io: 4
+      worker: 56
+  # 使其获取请求协议使用远程的,nginx代理需要设置:proxy_set_header X-Forwarded-Proto $scheme;
+  forward-headers-strategy: framework
+
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: '*'
+  endpoint:
+    health:
+      show-details: always
+
+
+logging:
+  level:
+    root: ${app.log-root-level:debug}
+    indi.zxiaozhou: ${app.log-package-level:debug}
+    com.alibaba.nacos: error
+  # 生成日志文件路径(注释不会生成)
+  pattern:
+    dateformat: yyyy-MM-dd HH:mm:ss
+  file:
+    name: ./logs/${spring.application.name}.log
+    max-history: 7
+debug: true
+
+
+# swagger配置
+springfox:
+  documentation:
+    enabled: ${app.swagger-enable:true}
+    swagger-ui:
+      base-url: ${server.context-path}
+  scan-packages:
+    - indi.zxiaozhou.skillfull

@@ -1,0 +1,48 @@
+// 打包版本号
+version = rootProject.ext.version["skillfull-gateway-service"]['version']
+
+
+bootJar { enabled = rootProject.ext.version["skillfull-gateway-service"]['bootJar'] }
+
+
+dependencies {
+    // core-webflux依赖或其中依赖
+    implementation project(':skillfull-core-modules:core-webflux')
+    compile 'org.springframework.boot:spring-boot-starter-data-redis-reactive'
+    compile 'org.springframework.boot:spring-boot-starter-webflux'
+
+    compile 'org.springframework.cloud:spring-cloud-starter-gateway'
+    compile 'org.springframework.cloud:spring-cloud-starter-stream-rabbit'
+    compile 'com.alibaba.cloud:spring-cloud-alibaba-sentinel-gateway'
+    compile 'com.alibaba.csp:sentinel-datasource-nacos'
+    compile rootProject.ext.dependencies["reflections"]
+
+}
+
+
+// 判断是否分离打包
+if (rootProject.ext["compileSeparate"]) {
+    // 分离打包处理
+    task clearLibJar(type: Delete) {
+        delete "$buildDir/libs/lib"
+    }
+
+    task copyJarToLib(type: Copy, dependsOn: 'clearLibJar') {
+        from project.configurations.runtime
+        into "$buildDir/libs/lib"
+    }
+
+    bootJar {
+        // 排除外部lib下依赖
+        project.configurations.runtime.files.collect{ exclude(it.name)}
+
+        // 打包前清空
+        dependsOn clearLibJar
+        dependsOn copyJarToLib
+        // 指定依赖包的路径
+        manifest {
+            attributes "Manifest-Version": 1.0,
+                    'Class-Path': project.configurations.runtime.files.collect { "lib/$it.name" }.join(' ')
+        }
+    }
+}

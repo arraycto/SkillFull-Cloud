@@ -1,0 +1,224 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="indi.zxiaozhou.skillfull.system.modules.manage.mapper.ManageSourceMapper">
+
+    <resultMap type="indi.zxiaozhou.skillfull.system.modules.manage.entity.ManageSourceEntity" id="ManageSourceMap">
+        <result property="dataSourceId" column="data_source_id" jdbcType="VARCHAR"/>
+        <result property="dbCode" column="db_code" jdbcType="VARCHAR"/>
+        <result property="dbSourceName" column="db_source_name" jdbcType="VARCHAR"/>
+        <result property="dbType" column="db_type" jdbcType="VARCHAR"/>
+        <result property="dbDriver" column="db_driver" jdbcType="VARCHAR"/>
+        <result property="dbUrl" column="db_url" jdbcType="VARCHAR"/>
+        <result property="dbName" column="db_name" jdbcType="VARCHAR"/>
+        <result property="dbUsername" column="db_username" jdbcType="VARCHAR"/>
+        <result property="dbPassword" column="db_password" jdbcType="VARCHAR"/>
+        <result property="createAreaCode" column="create_area_code" jdbcType="VARCHAR"/>
+        <result property="createPositionCode" column="create_position_code" jdbcType="VARCHAR"/>
+        <result property="createOrgSysCode" column="create_org_sys_code" jdbcType="VARCHAR"/>
+        <result property="createSystemCode" column="create_system_code" jdbcType="VARCHAR"/>
+        <result property="createUserId" column="create_user_id" jdbcType="VARCHAR"/>
+        <result property="createUserName" column="create_user_name" jdbcType="VARCHAR"/>
+        <result property="createTenantId" column="create_tenant_id" jdbcType="VARCHAR"/>
+        <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
+        <result property="updateUserId" column="update_user_id" jdbcType="VARCHAR"/>
+        <result property="updateUserName" column="update_user_name" jdbcType="VARCHAR"/>
+        <result property="updateTime" column="update_time" jdbcType="TIMESTAMP"/>
+        <result property="remark" column="remark" jdbcType="VARCHAR"/>
+        <result property="delFlag" column="del_flag" jdbcType="INTEGER"/>
+    </resultMap>
+
+    <!--数据库字段-->
+    <sql id="Column_List">
+        data_source_id, db_code, db_source_name, db_type, db_driver, db_url, db_name, db_username, db_password,
+        create_area_code, create_position_code, create_org_sys_code, create_system_code, create_user_id,
+        create_user_name, create_tenant_id, create_time, update_user_id, update_user_name, update_time, remark, del_flag
+    </sql>
+
+    <!--数据库字段待别名-->
+    <sql id="Column_List_Ali">
+        ali.data_source_id, ali.db_code, ali.db_source_name, ali.db_type, ali.db_driver, ali.db_url, ali.db_name,
+        ali.db_username, ali.db_password, ali.create_area_code, ali.create_position_code, ali.create_org_sys_code,
+        ali.create_system_code, ali.create_user_id, ali.create_user_name, ali.create_tenant_id, ali.create_time,
+        ali.update_user_id, ali.update_user_name, ali.update_time, ali.remark, ali.del_flag
+    </sql>
+
+    <!--数据库字段-->
+    <sql id="Column_List_Page_Ali">
+        ali.data_source_id, ali.db_code, ali.db_source_name, ali.db_type, ali.db_driver, ali.db_url, ali.db_name,
+        ali.db_username, ali.db_password, ali.create_area_code, ali.create_position_code, ali.create_org_sys_code,
+        ali.create_system_code, ali.create_user_id, ali.create_user_name, ali.create_tenant_id, ali.create_time,
+        ali.update_user_id, ali.update_user_name, ali.update_time, ali.remark, ali.del_flag
+    </sql>
+
+
+    <!--通过实体作为筛选条件分页查询-->
+    <select id="pageByModel"
+            resultType="indi.zxiaozhou.skillfull.system.modules.manage.service.dto.ManageSourcePageDto">
+        SELECT
+        <include refid="Column_List"/>
+        FROM sys_manage_source
+        <where>
+            del_flag = 0
+            <if test="query.dataSourceId != null and query.dataSourceId != ''">
+                AND data_source_id = #{query.dataSourceId, jdbcType=VARCHAR}
+            </if>
+            <if test="query.dbCode != null and query.dbCode != ''">
+                AND db_code = #{query.dbCode, jdbcType=VARCHAR}
+            </if>
+            <if test="query.dbSourceName != null and query.dbSourceName != ''">
+                AND db_source_name = #{query.dbSourceName, jdbcType=VARCHAR}
+            </if>
+            <if test="query.dbType != null and query.dbType != ''">
+                AND db_type = #{query.dbType, jdbcType=VARCHAR}
+            </if>
+            <if test="query.dbDriver != null and query.dbDriver != ''">
+                AND db_driver = #{query.dbDriver, jdbcType=VARCHAR}
+            </if>
+            <if test="query.dbUrl != null and query.dbUrl != ''">
+                AND db_url = #{query.dbUrl, jdbcType=VARCHAR}
+            </if>
+            <if test="query.dbName != null and query.dbName != ''">
+                AND db_name = #{query.dbName, jdbcType=VARCHAR}
+            </if>
+            <if test="query.dbUsername != null and query.dbUsername != ''">
+                AND db_username = #{query.dbUsername, jdbcType=VARCHAR}
+            </if>
+            <if test="query.dbPassword != null and query.dbPassword != ''">
+                AND db_password = #{query.dbPassword, jdbcType=VARCHAR}
+            </if>
+            <if test="query.createAreaCode != null and query.createAreaCode != ''">
+                AND create_area_code = #{query.createAreaCode, jdbcType=VARCHAR}
+            </if>
+            <if test="query.createPositionCode != null and query.createPositionCode != ''">
+                AND create_position_code = #{query.createPositionCode, jdbcType=VARCHAR}
+            </if>
+            <if test="query.createOrgSysCode != null and query.createOrgSysCode != ''">
+                AND create_org_sys_code = #{query.createOrgSysCode, jdbcType=VARCHAR}
+            </if>
+            <if test="query.createSystemCode != null and query.createSystemCode != ''">
+                AND create_system_code = #{query.createSystemCode, jdbcType=VARCHAR}
+            </if>
+            <if test="query.createUserId != null and query.createUserId != ''">
+                AND create_user_id = #{query.createUserId, jdbcType=VARCHAR}
+            </if>
+            <if test="query.createUserName != null and query.createUserName != ''">
+                AND create_user_name = #{query.createUserName, jdbcType=VARCHAR}
+            </if>
+            <if test="query.startTime != null">
+                AND create_time &gt;= #{query.startTime, jdbcType=TIMESTAMP}
+            </if>
+            <if test="query.endTime != null">
+                AND create_time &lt;= #{query.endTime, jdbcType=TIMESTAMP}
+            </if>
+            <if test="query.updateUserId != null and query.updateUserId != ''">
+                AND update_user_id = #{query.updateUserId, jdbcType=VARCHAR}
+            </if>
+            <if test="query.updateUserName != null and query.updateUserName != ''">
+                AND update_user_name = #{query.updateUserName, jdbcType=VARCHAR}
+            </if>
+            <if test="query.updateTime != null">
+                AND update_time = #{query.updateTime, jdbcType=TIMESTAMP}
+            </if>
+            <if test="query.remark != null and query.remark != ''">
+                AND remark = #{query.remark, jdbcType=VARCHAR}
+            </if>
+            <if test="query.delFlag != null">
+                AND del_flag = #{query.delFlag, jdbcType=INTEGER}
+            </if>
+        </where>
+    </select>
+
+
+    <!--通过实体作为筛选条件查询-->
+    <select id="selectListByModel"
+            resultType="indi.zxiaozhou.skillfull.system.modules.manage.service.dto.ManageSourceDto"
+            parameterType="indi.zxiaozhou.skillfull.system.modules.manage.controller.vo.ManageSourceQueryVo">
+        SELECT
+        <include refid="Column_List"/>
+        FROM sys_manage_source
+        <where>
+            del_flag = 0
+            <if test="dataSourceId != null and dataSourceId != ''">
+                AND data_source_id = #{dataSourceId, jdbcType=VARCHAR}
+            </if>
+            <if test="dbCode != null and dbCode != ''">
+                AND db_code = #{dbCode, jdbcType=VARCHAR}
+            </if>
+            <if test="dbSourceName != null and dbSourceName != ''">
+                AND db_source_name = #{dbSourceName, jdbcType=VARCHAR}
+            </if>
+            <if test="dbType != null and dbType != ''">
+                AND db_type = #{dbType, jdbcType=VARCHAR}
+            </if>
+            <if test="dbDriver != null and dbDriver != ''">
+                AND db_driver = #{dbDriver, jdbcType=VARCHAR}
+            </if>
+            <if test="dbUrl != null and dbUrl != ''">
+                AND db_url = #{dbUrl, jdbcType=VARCHAR}
+            </if>
+            <if test="dbName != null and dbName != ''">
+                AND db_name = #{dbName, jdbcType=VARCHAR}
+            </if>
+            <if test="dbUsername != null and dbUsername != ''">
+                AND db_username = #{dbUsername, jdbcType=VARCHAR}
+            </if>
+            <if test="dbPassword != null and dbPassword != ''">
+                AND db_password = #{dbPassword, jdbcType=VARCHAR}
+            </if>
+            <if test="createAreaCode != null and createAreaCode != ''">
+                AND create_area_code = #{createAreaCode, jdbcType=VARCHAR}
+            </if>
+            <if test="createPositionCode != null and createPositionCode != ''">
+                AND create_position_code = #{createPositionCode, jdbcType=VARCHAR}
+            </if>
+            <if test="createOrgSysCode != null and createOrgSysCode != ''">
+                AND create_org_sys_code = #{createOrgSysCode, jdbcType=VARCHAR}
+            </if>
+            <if test="createSystemCode != null and createSystemCode != ''">
+                AND create_system_code = #{createSystemCode, jdbcType=VARCHAR}
+            </if>
+            <if test="createUserId != null and createUserId != ''">
+                AND create_user_id = #{createUserId, jdbcType=VARCHAR}
+            </if>
+            <if test="createUserName != null and createUserName != ''">
+                AND create_user_name = #{createUserName, jdbcType=VARCHAR}
+            </if>
+            <if test="createTime != null">
+                AND create_time = #{createTime, jdbcType=TIMESTAMP}
+            </if>
+            <if test="updateUserId != null and updateUserId != ''">
+                AND update_user_id = #{updateUserId, jdbcType=VARCHAR}
+            </if>
+            <if test="updateUserName != null and updateUserName != ''">
+                AND update_user_name = #{updateUserName, jdbcType=VARCHAR}
+            </if>
+            <if test="updateTime != null">
+                AND update_time = #{updateTime, jdbcType=TIMESTAMP}
+            </if>
+            <if test="remark != null and remark != ''">
+                AND remark = #{remark, jdbcType=VARCHAR}
+            </if>
+            <if test="delFlag != null">
+                AND del_flag = #{delFlag, jdbcType=INTEGER}
+            </if>
+        </where>
+    </select>
+
+
+    <!-- 通过数据源id物理删除 -->
+    <delete id="physicalDeleteById">
+        DELETE
+        FROM sys_manage_source
+        WHERE data_source_id = #{id, jdbcType=VARCHAR}
+    </delete>
+
+
+    <!-- 通过id逻辑删除 -->
+    <update id="deleteById">
+        UPDATE sys_manage_source
+        <set>
+            del_flag = 1,
+        </set>
+        WHERE data_source_id = #{dataSourceId, jdbcType=VARCHAR}
+    </update>
+</mapper>

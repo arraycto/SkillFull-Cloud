@@ -1,0 +1,185 @@
+import org.apache.tools.ant.filters.ReplaceTokens
+
+plugins {
+    id 'java'
+    id 'idea'
+    id 'org.springframework.boot' version '2.3.9.RELEASE'
+    id 'io.spring.dependency-management' version '1.0.11.RELEASE'
+    id 'com.bmuschko.docker-spring-boot-application' version '6.7.0'
+}
+
+
+apply from : "config.gradle"
+
+
+version = rootProject.ext.version["SkillFull-Cloud"]
+
+
+configurations {
+    compileOnly {
+        extendsFrom annotationProcessor
+    }
+}
+
+
+// 批量创建容器并推送到仓库
+task dockerPushImageAll(){
+    subprojects.findAll{project->
+        def versionInfo = rootProject.ext.version[project.name]
+        if(versionInfo != null && versionInfo['bootJar']){
+            dependsOn ':'+project.name+':dockerPushImage'
+        }
+    }
+}
+
+
+// 批量创建bootJar包
+task buildBootJarAll(){
+    subprojects.findAll{project->
+        def versionInfo = rootProject.ext.version[project.name]
+        if(versionInfo != null && versionInfo['bootJar']){
+            dependsOn ':'+project.name+':bootJar'
+        }
+    }
+}
+
+
+// 所有项目下载仓库
+allprojects {
+    // 指定所有项目maven仓库
+    repositories {
+        maven{ url 'http://maven.aliyun.com/nexus/content/groups/public/'}
+        mavenCentral()
+    }
+    // 指定编译编码
+    tasks.withType(JavaCompile) {
+        options.encoding = "UTF-8"
+    }
+    // 编译jdk版本
+    sourceCompatibility = '1.8'
+    targetCompatibility = '1.8'
+    // 项目全局信息
+    group = 'indi.zxiaozhou.skillfull'
+}
+
+
+subprojects {
+    apply plugin: "java"
+    apply plugin: 'idea'
+    apply plugin: 'io.spring.dependency-management'
+    apply plugin: 'org.springframework.boot'
+    apply plugin: 'com.bmuschko.docker-spring-boot-application'
+
+    jar { enabled = true }
+    bootJar { enabled = false }
+
+    // 处理非resources下的mapper xml文件问题
+    task mapperXmlCopy(type: Copy) {
+        copy {
+            from("src/main/java") {include ("**/xml/*.xml")}
+            into("${buildDir}/classes/java/main")
+        }
+    }
+
+    // docker打包local
+    def dockerInfo = rootProject.ext.docker['local']
+    // jar名称
+    def jarBaseName = bootJar.archiveBaseName.get()
+    // jar版本号
+    def versionInfo = rootProject.ext.version[jarBaseName]
+    if(versionInfo != null){
+        docker {
+            springBootApplication {
+                baseImage = dockerInfo.baseImage
+                ports = [80]
+                images = [dockerInfo.images+ jarBaseName+":"+versionInfo['version']]
+            }
+            if(dockerInfo.isRemortDocker){
+                url.set(dockerInfo.remortDocker)
+            }
+            registryCredentials  dockerInfo.credentials
+        }
+    }
+
+    // 进行配置文件变量替换
+    processResources {
+        filteringCharset = 'UTF-8'
+        include('*.yml','*.yaml')
+        // 只处理yml、yaml文件替换
+        filesMatching('*.yml') {
+            filter ReplaceTokens, tokens: [version: bootJar.archiveVersion.get()]
+            filter ReplaceTokens, tokens: [name: bootJar.archiveBaseName.get()]
+        }
+        filesMatching('*.yaml') {
+            filter ReplaceTokens, tokens: [version: bootJar.archiveVersion.get()]
+            filter ReplaceTokens, tokens: [name: bootJar.archiveBaseName.get()]
+        }
+    }
+
+    test {
+        useJUnitPlatform()
+    }
+
+    // cloud依赖管理
+    dependencyManagement {
+        imports {
+            mavenBom "com.alibaba.cloud:spring-cloud-alibaba-dependencies:${springCloudAlibabaVersion}"
+            mavenBom "com.alibaba.cloud:aliyun-spring-boot-dependencies:${springAlibabaVersion}"
+            mavenBom "org.springframework.cloud:spring-cloud-dependencies:${springCloudVersion}"
+        }
+    }
+
+    // 公共依赖
+    dependencies {
+        annotationProcessor "org.springframework.boot:spring-boot-configuration-processor"
+        annotationProcessor "org.projectlombok:lombok"
+        annotationProcessor  rootProject.ext.dependencies["mapstruct"]
+        annotationProcessor  rootProject.ext.dependencies["mapstruct-processor"]
+
+        compileOnly "org.springframework.boot:spring-boot-configuration-processor"
+        compileOnly "org.projectlombok:lombok"
+        compileOnly rootProject.ext.dependencies["mapstruct"]
+        compileOnly rootProject.ext.dependencies["mapstruct-processor"]
+
+        compile 'io.micrometer:micrometer-registry-prometheus'
+        compile 'org.springframework.cloud:spring-cloud-starter'
+        compile 'org.springframework.cloud:spring-cloud-starter-openfeign'
+        compile 'org.springframework.boot:spring-boot-starter-cache'
+        compile 'org.springframework.boot:spring-boot-configuration-processor'
+        compile 'org.springframework.boot:spring-boot-starter-validation'
+        compile 'org.springframework.boot:spring-boot-starter-aop'
+        compile 'org.springframework.boot:spring-boot-starter-actuator'
+        compile 'com.alibaba.cloud:spring-cloud-starter-alibaba-sentinel'
+        compile 'com.alibaba.cloud:spring-cloud-starter-alibaba-nacos-discovery'
+        compile 'com.alibaba.cloud:spring-cloud-starter-alibaba-nacos-config'
+        compile 'org.springframework.cloud:spring-cloud-starter-loadbalancer'
+
+
+        compile rootProject.ext.dependencies["guava"]
+        compile rootProject.ext.dependencies["hutool-all"]
+        compile rootProject.ext.dependencies["commons-lang3"]
+        compile rootProject.ext.dependencies["commons-codec"]
+        compile rootProject.ext.dependencies["springfox-boot-starter"]
+        compile rootProject.ext.dependencies["fastjson"]
+        compile rootProject.ext.dependencies["slf4j-api"]
+        compile rootProject.ext.dependencies["commons-io"]
+        compile rootProject.ext.dependencies["commons-pool2"]
+        compile rootProject.ext.dependencies["bcprov-jdk14"]
+
+        testImplementation('org.springframework.boot:spring-boot-starter-test') {
+            exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
+        }
+        testImplementation 'org.springframework.amqp:spring-rabbit-test'
+        testImplementation 'org.projectlombok:lombok'
+        testImplementation 'org.springframework.cloud:spring-cloud-stream-test-support'
+    }
+}
+
+
+
+
+
+
+
+
+

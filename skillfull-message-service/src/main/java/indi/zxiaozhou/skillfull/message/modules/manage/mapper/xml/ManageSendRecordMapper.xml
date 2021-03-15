@@ -1,0 +1,262 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="indi.zxiaozhou.skillfull.message.modules.manage.mapper.ManageSendRecordMapper">
+
+    <resultMap type="indi.zxiaozhou.skillfull.message.modules.manage.entity.ManageSendRecordEntity"
+               id="ManageSendRecordMap">
+        <result property="esId" column="es_id" jdbcType="VARCHAR"/>
+        <result property="esTitle" column="es_title" jdbcType="VARCHAR"/>
+        <result property="esType" column="es_type" jdbcType="INTEGER"/>
+        <result property="esReceiver" column="es_receiver" jdbcType="VARCHAR"/>
+        <result property="esParam" column="es_param" jdbcType="VARCHAR"/>
+        <result property="esContent" column="es_content" jdbcType="VARCHAR"/>
+        <result property="esSendTime" column="es_send_time" jdbcType="TIMESTAMP"/>
+        <result property="esSendStatus" column="es_send_status" jdbcType="VARCHAR"/>
+        <result property="esSendNum" column="es_send_num" jdbcType="INTEGER"/>
+        <result property="esResult" column="es_result" jdbcType="VARCHAR"/>
+        <result property="createAreaCode" column="create_area_code" jdbcType="VARCHAR"/>
+        <result property="createPositionCode" column="create_position_code" jdbcType="VARCHAR"/>
+        <result property="createOrgSysCode" column="create_org_sys_code" jdbcType="VARCHAR"/>
+        <result property="createSystemCode" column="create_system_code" jdbcType="VARCHAR"/>
+        <result property="createUserId" column="create_user_id" jdbcType="VARCHAR"/>
+        <result property="createUserName" column="create_user_name" jdbcType="VARCHAR"/>
+        <result property="createTenantId" column="create_tenant_id" jdbcType="VARCHAR"/>
+        <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
+        <result property="updateUserId" column="update_user_id" jdbcType="VARCHAR"/>
+        <result property="updateUserName" column="update_user_name" jdbcType="VARCHAR"/>
+        <result property="updateTime" column="update_time" jdbcType="TIMESTAMP"/>
+        <result property="remark" column="remark" jdbcType="VARCHAR"/>
+        <result property="delFlag" column="del_flag" jdbcType="INTEGER"/>
+    </resultMap>
+
+    <!--数据库字段-->
+    <sql id="Column_List">
+        es_id, es_title, es_type, es_receiver, es_param, es_content, es_send_time, es_send_status, es_send_num,
+        es_result, create_area_code, create_position_code, create_org_sys_code, create_system_code, create_user_id,
+        create_user_name, create_tenant_id, create_time, update_user_id, update_user_name, update_time, remark, del_flag
+    </sql>
+
+    <!--数据库字段待别名-->
+    <sql id="Column_List_Ali">
+        ali.es_id, ali.es_title, ali.es_type, ali.es_receiver, ali.es_param, ali.es_content, ali.es_send_time,
+        ali.es_send_status, ali.es_send_num, ali.es_result, ali.create_area_code, ali.create_position_code,
+        ali.create_org_sys_code, ali.create_system_code, ali.create_user_id, ali.create_user_name, ali.create_tenant_id,
+        ali.create_time, ali.update_user_id, ali.update_user_name, ali.update_time, ali.remark, ali.del_flag
+    </sql>
+
+    <!--数据库字段-->
+    <sql id="Column_List_Page_Ali">
+        ali.es_id, ali.es_title, ali.es_type, ali.es_receiver, ali.es_param, ali.es_content, ali.es_send_time,
+        ali.es_send_status, ali.es_send_num, ali.es_result, ali.create_area_code, ali.create_position_code,
+        ali.create_org_sys_code, ali.create_system_code, ali.create_user_id, ali.create_user_name, ali.create_tenant_id,
+        ali.create_time, ali.update_user_id, ali.update_user_name, ali.update_time, ali.remark, ali.del_flag
+    </sql>
+
+
+    <!--通过实体作为筛选条件分页查询-->
+    <select id="pageByModel"
+            resultType="indi.zxiaozhou.skillfull.message.modules.manage.service.dto.ManageSendRecordPageDto">
+        SELECT
+        <include refid="Column_List_Page_Ali"/>
+        FROM msg_manage_send_record ali
+        <where>
+            ali.del_flag = 0
+            <if test="query.esId != null and query.esId != ''">
+                AND ali.es_id = #{query.esId, jdbcType=VARCHAR}
+            </if>
+            <if test="query.esTitle != null and query.esTitle != ''">
+                AND ali.es_title = #{query.esTitle, jdbcType=VARCHAR}
+            </if>
+            <if test="query.esType != null">
+                AND ali.es_type = #{query.esType, jdbcType=INTEGER}
+            </if>
+            <if test="query.esReceiver != null and query.esReceiver != ''">
+                AND ali.es_receiver = #{query.esReceiver, jdbcType=VARCHAR}
+            </if>
+            <if test="query.esParam != null and query.esParam != ''">
+                AND ali.es_param = #{query.esParam, jdbcType=VARCHAR}
+            </if>
+            <if test="query.esContent != null and query.esContent != ''">
+                AND ali.es_content = #{query.esContent, jdbcType=VARCHAR}
+            </if>
+            <if test="query.esSendTime != null">
+                AND ali.es_send_time = #{query.esSendTime, jdbcType=TIMESTAMP}
+            </if>
+            <if test="query.esSendStatus != null and query.esSendStatus != ''">
+                AND ali.es_send_status = #{query.esSendStatus, jdbcType=VARCHAR}
+            </if>
+            <if test="query.esSendNum != null">
+                AND ali.es_send_num = #{query.esSendNum, jdbcType=INTEGER}
+            </if>
+            <if test="query.esResult != null and query.esResult != ''">
+                AND ali.es_result = #{query.esResult, jdbcType=VARCHAR}
+            </if>
+            <if test="query.createAreaCode != null and query.createAreaCode != ''">
+                AND ali.create_area_code = #{query.createAreaCode, jdbcType=VARCHAR}
+            </if>
+            <if test="query.createPositionCode != null and query.createPositionCode != ''">
+                AND ali.create_position_code = #{query.createPositionCode, jdbcType=VARCHAR}
+            </if>
+            <if test="query.createOrgSysCode != null and query.createOrgSysCode != ''">
+                AND ali.create_org_sys_code = #{query.createOrgSysCode, jdbcType=VARCHAR}
+            </if>
+            <if test="query.createSystemCode != null and query.createSystemCode != ''">
+                AND ali.create_system_code = #{query.createSystemCode, jdbcType=VARCHAR}
+            </if>
+            <if test="query.createUserId != null and query.createUserId != ''">
+                AND ali.create_user_id = #{query.createUserId, jdbcType=VARCHAR}
+            </if>
+            <if test="query.createUserName != null and query.createUserName != ''">
+                AND ali.create_user_name = #{query.createUserName, jdbcType=VARCHAR}
+            </if>
+            <if test="query.createTenantId != null and query.createTenantId != ''">
+                AND ali.create_tenant_id = #{query.createTenantId, jdbcType=VARCHAR}
+            </if>
+            <if test="query.startTime != null">
+                AND ali.create_time &gt;= #{query.startTime, jdbcType=TIMESTAMP}
+            </if>
+            <if test="query.endTime != null">
+                AND ali.create_time &lt;= #{query.endTime, jdbcType=TIMESTAMP}
+            </if>
+            <if test="query.updateUserId != null and query.updateUserId != ''">
+                AND ali.update_user_id = #{query.updateUserId, jdbcType=VARCHAR}
+            </if>
+            <if test="query.updateUserName != null and query.updateUserName != ''">
+                AND ali.update_user_name = #{query.updateUserName, jdbcType=VARCHAR}
+            </if>
+            <if test="query.updateTime != null">
+                AND ali.update_time = #{query.updateTime, jdbcType=TIMESTAMP}
+            </if>
+            <if test="query.remark != null and query.remark != ''">
+                AND ali.remark = #{query.remark, jdbcType=VARCHAR}
+            </if>
+            <if test="query.delFlag != null">
+                AND ali.del_flag = #{query.delFlag, jdbcType=INTEGER}
+            </if>
+        </where>
+    </select>
+
+
+    <!--通过实体作为筛选条件查询-->
+    <select id="selectListByModel"
+            resultType="indi.zxiaozhou.skillfull.message.modules.manage.service.dto.ManageSendRecordDto"
+            parameterType="indi.zxiaozhou.skillfull.message.modules.manage.controller.vo.ManageSendRecordQueryVo">
+        SELECT
+        <include refid="Column_List"/>
+        FROM msg_manage_send_record
+        <where>
+            del_flag = 0
+            <if test="esId != null and esId != ''">
+                AND es_id = #{esId, jdbcType=VARCHAR}
+            </if>
+            <if test="esTitle != null and esTitle != ''">
+                AND es_title = #{esTitle, jdbcType=VARCHAR}
+            </if>
+            <if test="esType != null">
+                AND es_type = #{esType, jdbcType=INTEGER}
+            </if>
+            <if test="esReceiver != null and esReceiver != ''">
+                AND es_receiver = #{esReceiver, jdbcType=VARCHAR}
+            </if>
+            <if test="esParam != null and esParam != ''">
+                AND es_param = #{esParam, jdbcType=VARCHAR}
+            </if>
+            <if test="esContent != null and esContent != ''">
+                AND es_content = #{esContent, jdbcType=VARCHAR}
+            </if>
+            <if test="esSendTime != null">
+                AND es_send_time = #{esSendTime, jdbcType=TIMESTAMP}
+            </if>
+            <if test="esSendStatus != null and esSendStatus != ''">
+                AND es_send_status = #{esSendStatus, jdbcType=VARCHAR}
+            </if>
+            <if test="esSendNum != null">
+                AND es_send_num = #{esSendNum, jdbcType=INTEGER}
+            </if>
+            <if test="esResult != null and esResult != ''">
+                AND es_result = #{esResult, jdbcType=VARCHAR}
+            </if>
+            <if test="createAreaCode != null and createAreaCode != ''">
+                AND create_area_code = #{createAreaCode, jdbcType=VARCHAR}
+            </if>
+            <if test="createPositionCode != null and createPositionCode != ''">
+                AND create_position_code = #{createPositionCode, jdbcType=VARCHAR}
+            </if>
+            <if test="createOrgSysCode != null and createOrgSysCode != ''">
+                AND create_org_sys_code = #{createOrgSysCode, jdbcType=VARCHAR}
+            </if>
+            <if test="createSystemCode != null and createSystemCode != ''">
+                AND create_system_code = #{createSystemCode, jdbcType=VARCHAR}
+            </if>
+            <if test="createUserId != null and createUserId != ''">
+                AND create_user_id = #{createUserId, jdbcType=VARCHAR}
+            </if>
+            <if test="createUserName != null and createUserName != ''">
+                AND create_user_name = #{createUserName, jdbcType=VARCHAR}
+            </if>
+            <if test="createTenantId != null and createTenantId != ''">
+                AND create_tenant_id = #{createTenantId, jdbcType=VARCHAR}
+            </if>
+            <if test="createTime != null">
+                AND create_time = #{createTime, jdbcType=TIMESTAMP}
+            </if>
+            <if test="updateUserId != null and updateUserId != ''">
+                AND update_user_id = #{updateUserId, jdbcType=VARCHAR}
+            </if>
+            <if test="updateUserName != null and updateUserName != ''">
+                AND update_user_name = #{updateUserName, jdbcType=VARCHAR}
+            </if>
+            <if test="updateTime != null">
+                AND update_time = #{updateTime, jdbcType=TIMESTAMP}
+            </if>
+            <if test="remark != null and remark != ''">
+                AND remark = #{remark, jdbcType=VARCHAR}
+            </if>
+            <if test="delFlag != null">
+                AND del_flag = #{delFlag, jdbcType=INTEGER}
+            </if>
+        </where>
+    </select>
+
+
+    <!-- 通过消息id物理删除 -->
+    <delete id="physicalDeleteById">
+        DELETE
+        FROM msg_manage_send_record
+        WHERE es_id = #{id, jdbcType=VARCHAR}
+    </delete>
+
+
+    <!-- 通过字典id物理批量删除 -->
+    <delete id="physicalDeleteBatchIds">
+        DELETE
+        FROM msg_manage_send_record
+        WHERE es_id IN
+        <foreach collection="coll" item="item" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </delete>
+
+
+    <!-- 通过id逻辑删除 -->
+    <update id="deleteById">
+        UPDATE msg_manage_send_record
+        <set>
+            del_flag = 1,
+        </set>
+        WHERE es_id = #{esId, jdbcType=VARCHAR}
+    </update>
+
+
+    <!-- 通过id批量逻辑删除 -->
+    <update id="deleteBatchIds">
+        UPDATE msg_manage_send_record
+        <set>
+            del_flag = 1,
+        </set>
+        WHERE es_id IN
+        <foreach collection="coll" item="item" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </update>
+</mapper>

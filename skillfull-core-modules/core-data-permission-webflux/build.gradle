@@ -1,0 +1,10 @@
+version = rootProject.ext.version["skillfull-core-modules:core-data-permission-webflux"]['version']
+
+
+dependencies {
+    compile project(':skillfull-core-modules:core-common')
+
+    compile 'org.springframework.boot:spring-boot-starter-undertow'
+    runtimeOnly rootProject.ext.dependencies["mysql-connector-java"]
+    compile rootProject.ext.dependencies["mybatis-plus-boot-starter"]
+}

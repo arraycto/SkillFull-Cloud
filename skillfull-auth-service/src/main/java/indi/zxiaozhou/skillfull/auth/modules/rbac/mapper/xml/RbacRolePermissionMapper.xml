@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="indi.zxiaozhou.skillfull.auth.modules.rbac.mapper.RbacRolePermissionMapper">
+
+    <resultMap type="indi.zxiaozhou.skillfull.auth.modules.rbac.entity.RbacRolePermissionEntity"
+               id="RbacRolePermissionMap">
+        <result property="rolePermissionId" column="role_permission_id" jdbcType="VARCHAR"/>
+        <result property="permissionId" column="permission_id" jdbcType="VARCHAR"/>
+        <result property="roleId" column="role_id" jdbcType="VARCHAR"/>
+        <result property="remark" column="remark" jdbcType="VARCHAR"/>
+        <result property="createUserId" column="create_user_id" jdbcType="VARCHAR"/>
+        <result property="createUserName" column="create_user_name" jdbcType="VARCHAR"/>
+        <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
+        <result property="updateUserId" column="update_user_id" jdbcType="VARCHAR"/>
+        <result property="updateUserName" column="update_user_name" jdbcType="VARCHAR"/>
+        <result property="updateTime" column="update_time" jdbcType="TIMESTAMP"/>
+        <result property="delFlag" column="del_flag" jdbcType="INTEGER"/>
+        <result property="createAreaCode" column="create_area_code" jdbcType="VARCHAR"/>
+        <result property="createPositionCode" column="create_position_code" jdbcType="VARCHAR"/>
+        <result property="createOrgSysCode" column="create_org_sys_code" jdbcType="VARCHAR"/>
+        <result property="createSystemCode" column="create_system_code" jdbcType="VARCHAR"/>
+        <result property="createTenantId" column="create_tenant_id" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <!--数据库字段-->
+    <sql id="Column_List">
+        role_permission_id, permission_id, role_id, remark, create_user_id,
+        create_user_name, create_time, update_user_id, update_user_name, update_time, del_flag, create_area_code,
+        create_position_code, create_org_sys_code, create_system_code, create_tenant_id
+    </sql>
+
+    <!--数据库字段待别名-->
+    <sql id="Column_List_Ali">
+        ali.role_permission_id, ali.permission_id, ali.role_id, ali.remark,
+        ali.create_user_id, ali.create_user_name, ali.create_time, ali.update_user_id, ali.update_user_name,
+        ali.update_time, ali.del_flag, ali.create_area_code, ali.create_position_code, ali.create_org_sys_code,
+        ali.create_system_code, ali.create_tenant_id
+    </sql>
+
+    <!--数据库字段-->
+    <sql id="Column_List_Page_Ali">
+        ali.role_permission_id, ali.permission_id, ali.role_id, ali.remark,
+        ali.create_user_id, ali.create_user_name, ali.create_time, ali.update_user_id, ali.update_user_name,
+        ali.update_time, ali.del_flag, ali.create_area_code, ali.create_position_code, ali.create_org_sys_code,
+        ali.create_system_code, ali.create_tenant_id
+    </sql>
+
+    <sql id="Column_List_Permission">
+        arp.permission_id, arp.parent_id, arp.title, arp.path, arp.component, arp.path_name, arp.redirect,
+        arp.permission_type, arp.actions_uri, arp.actions, arp.is_external, arp.external_url, arp.open_type,
+        arp.button_strategy, arp.check_action_request, arp.sort_no, arp.icon_type, arp.active_menu, arp.icon,
+        arp.always_show, arp.hidden, arp.permission_status, arp.keep_alive, arp.breadcrumb, arp.affix, arp.permission_sys_code,
+        arp.enable_delete, arp.remark, arp.create_area_code, arp.create_position_code, arp.create_org_sys_code,
+        arp.create_system_code, arp.create_tenant_id, arp.create_user_id, arp.create_user_name, arp.create_time,
+        arp.update_user_id, arp.update_user_name, arp.update_time, arp.del_flag
+    </sql>
+
+
+    <!--通过实体作为筛选条件查询-->
+    <select id="selectListByModel"
+            resultType="indi.zxiaozhou.skillfull.auth.modules.rbac.service.dto.RbacRolePermissionDto"
+            parameterType="indi.zxiaozhou.skillfull.auth.modules.rbac.controller.vo.RbacRolePermissionQueryVo">
+        SELECT
+        arr.role_code,
+        arr.role_sys_code,
+        arr.role_name,
+        arrp.role_id,
+        <include refid="Column_List_Permission"/>
+        FROM
+        auth_rbac_role_permission arrp
+        LEFT JOIN auth_rbac_permission arp ON arrp.permission_id = arp.permission_id
+        LEFT JOIN auth_rbac_role arr ON arr.role_id = arrp.role_id
+        <where>
+            arp.del_flag = 0
+            AND arrp.del_flag = 0
+            AND arp.permission_status = 1
+            <if test="query.roleIds != null and query.roleIds.size() > 0">
+                AND arrp.role_id IN
+                <foreach collection="query.roleIds" item="id" index="index" open="(" close=")" separator=",">
+                    #{id}
+                </foreach>
+            </if>
+            <if test="query.roleCodes != null and query.roleCodes.size() > 0">
+                AND arr.role_code IN
+                <foreach collection="query.roleCodes" item="id" index="index" open="(" close=")" separator=",">
+                    #{id}
+                </foreach>
+            </if>
+            <choose>
+                <when test="query.type!=null and query.type==1">
+                    AND arp.permission_type = 0
+                </when>
+                <when test="query.type!=null and query.type==2">
+                    AND arp.permission_type = 1
+                </when>
+                <when test="query.type!=null and query.type==3">
+                    AND arp.permission_type = 2
+                </when>
+                <when test="query.type!=null and query.type==4">
+                    AND (arp.permission_type = 0 OR arp.permission_type = 1)
+                </when>
+                <when test="query.type!=null and query.type==5">
+                    AND (arp.permission_type = 1 OR arp.permission_type = 2)
+                </when>
+            </choose>
+        </where>
+    </select>
+
+
+    <!-- 通过权限角色id物理删除 -->
+    <delete id="physicalDeleteById">
+        DELETE
+        FROM auth_rbac_role_permission
+        WHERE role_id = #{id, jdbcType=VARCHAR}
+    </delete>
+
+
+    <!-- 通过id逻辑删除 -->
+    <update id="deleteById">
+        UPDATE auth_rbac_role_permission
+        <set>
+            del_flag = 1,
+        </set>
+        WHERE role_permission_id = #{rolePermissionId, jdbcType=VARCHAR}
+    </update>
+</mapper>

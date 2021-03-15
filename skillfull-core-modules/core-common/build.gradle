@@ -1,0 +1,7 @@
+version = rootProject.ext.version["skillfull-core-modules:core-common"]['version']
+
+
+dependencies {
+    compile rootProject.ext.dependencies["modelmapper"]
+    compile rootProject.ext.dependencies["java-jwt"]
+}

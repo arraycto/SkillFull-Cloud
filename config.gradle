@@ -1,0 +1,78 @@
+
+ext {
+    set('springCloudVersion', "Hoxton.SR9")
+    set('springCloudAlibabaVersion', "2.2.5.RELEASE")
+    set('springAlibabaVersion', "1.0.0")
+    // 分离打包开关(打开后依赖与源码会分开)
+    set('compileSeparate', true)
+
+
+    dependencies = [
+            'mapstruct' : 'org.mapstruct:mapstruct:1.4.1.Final',
+            'mapstruct-processor' : 'org.mapstruct:mapstruct-processor:1.4.1.Final',
+            'guava' : 'com.google.guava:guava:30.0-jre',
+            'hutool-all' :  'cn.hutool:hutool-all:5.5.7',
+            'commons-lang3' : 'org.apache.commons:commons-lang3:3.9',
+            'commons-codec' : 'commons-codec:commons-codec:1.13',
+            'commons-io' : 'commons-io:commons-io:1.3.2',
+            'commons-pool2' : 'org.apache.commons:commons-pool2:2.9.0',
+            'springfox-boot-starter' : 'io.springfox:springfox-boot-starter:3.0.0',
+            'fastjson' : 'com.alibaba:fastjson:1.2.75',
+            'slf4j-api' : 'org.slf4j:slf4j-api:1.7.25',
+            'mybatis-plus-boot-starter' : 'com.baomidou:mybatis-plus-boot-starter:3.4.2',
+            'druid-spring-boot-starter' : 'com.alibaba:druid-spring-boot-starter:1.2.4',
+            'modelmapper' : 'org.modelmapper:modelmapper:2.3.9',
+            'mysql-connector-java' : 'mysql:mysql-connector-java:8.0.21',
+            'easyexcel' : 'com.alibaba:easyexcel:2.2.7',
+            'java-jwt' : 'com.auth0:java-jwt:3.9.0',
+            'reflections' : 'org.reflections:reflections:0.9.12',
+            'jaxb-impl' :'com.sun.xml.bind:jaxb-impl:3.0.0',
+            'spring-boot-admin-starter-server' : 'de.codecentric:spring-boot-admin-starter-server:2.3.1',
+            'JustAuth' : 'me.zhyd.oauth:JustAuth:1.15.9',
+            'bcprov-jdk14' : 'bouncycastle:bcprov-jdk14:139',
+            'dom4j' : 'dom4j:dom4j:1.6',
+            'seata-spring-boot-starter' : 'io.seata:seata-spring-boot-starter:1.4.1',
+
+            'jackson-annotations' : 'com.fasterxml.jackson.core:jackson-annotations:2.9.9',
+            'jackson-databind' : 'com.fasterxml.jackson.core:jackson-databind:2.9.9',
+            'jackson-datatype-jsr310' : 'com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.9.9',
+    ]
+
+
+    version = [
+            // 主项目
+            'SkillFull-Cloud' : '0.0.1-SNAPSHOT',
+
+            // 服务
+            'skillfull-auth-service' : [version:'0.9.9', bootJar:true],
+            'skillfull-gateway-service' : [version:'0.9.9', bootJar:true],
+            'skillfull-gen-service' : [version:'0.9.9', bootJar:true],
+            'skillfull-job-service' : [version:'0.9.9', bootJar:true],
+            'skillfull-logging-service' : [version:'0.9.9', bootJar:true],
+            'skillfull-message-service' : [version:'0.9.9', bootJar:true],
+            'skillfull-monitor-service' : [version:'0.9.9', bootJar:true],
+            'skillfull-storage-service' : [version:'0.9.9', bootJar:true],
+            'skillfull-system-service' : [version:'0.9.9', bootJar:true],
+
+            // 工具部分
+            'skillfull-core-modules:core-webflux' : [version:'0.9.9', bootJar:false],
+            'skillfull-core-modules:core-mvc' : [version:'0.9.9', bootJar:false],
+            'skillfull-core-modules:core-common' : [version:'0.9.9', bootJar:false],
+            'skillfull-core-modules:core-data-permission-webmvc' : [version:'0.9.9', bootJar:false],
+            'skillfull-core-modules:core-data-permission-webflux' : [version:'0.9.9', bootJar:false]
+    ]
+
+    docker = [
+            'local':[
+                'baseImage' : 'myharbor.com:8080/library/openjdk:11.0.10-jre-buster',
+                 images : "myharbor.com:8080/own-projects/",
+                isRemortDocker: false,
+                credentials: {
+                    url = 'http://myharbor.com:8080'
+                    username = 'admin'
+                    password = 'QWEasd123'
+                }
+            ]
+    ]
+
+}

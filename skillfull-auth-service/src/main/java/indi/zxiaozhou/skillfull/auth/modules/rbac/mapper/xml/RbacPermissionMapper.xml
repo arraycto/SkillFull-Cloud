@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="indi.zxiaozhou.skillfull.auth.modules.rbac.mapper.RbacPermissionMapper">
+
+    <resultMap type="indi.zxiaozhou.skillfull.auth.modules.rbac.entity.RbacPermissionEntity" id="RbacPermissionMap">
+        <result property="permissionId" column="permission_id" jdbcType="VARCHAR"/>
+        <result property="parentId" column="parent_id" jdbcType="VARCHAR"/>
+        <result property="title" column="title" jdbcType="VARCHAR"/>
+        <result property="path" column="path" jdbcType="VARCHAR"/>
+        <result property="component" column="component" jdbcType="VARCHAR"/>
+        <result property="pathName" column="path_name" jdbcType="VARCHAR"/>
+        <result property="redirect" column="redirect" jdbcType="VARCHAR"/>
+        <result property="permissionType" column="permission_type" jdbcType="INTEGER"/>
+        <result property="actionsUri" column="actions_uri" jdbcType="VARCHAR"/>
+        <result property="actions" column="actions" jdbcType="VARCHAR"/>
+        <result property="permissionSysCode" column="permission_sys_code" jdbcType="VARCHAR"/>
+        <result property="isExternal" column="is_external" jdbcType="INTEGER"/>
+        <result property="externalUrl" column="external_url" jdbcType="VARCHAR"/>
+        <result property="openType" column="open_type" jdbcType="INTEGER"/>
+        <result property="buttonStrategy" column="button_strategy" jdbcType="INTEGER"/>
+        <result property="checkActionRequest" column="check_action_request" jdbcType="INTEGER"/>
+        <result property="sortNo" column="sort_no" jdbcType="INTEGER"/>
+        <result property="iconType" column="icon_type" jdbcType="INTEGER"/>
+        <result property="activeMenu" column="active_menu" jdbcType="VARCHAR"/>
+        <result property="icon" column="icon" jdbcType="VARCHAR"/>
+        <result property="alwaysShow" column="always_show" jdbcType="INTEGER"/>
+        <result property="hidden" column="hidden" jdbcType="INTEGER"/>
+        <result property="permissionStatus" column="permission_status" jdbcType="INTEGER"/>
+        <result property="keepAlive" column="keep_alive" jdbcType="INTEGER"/>
+        <result property="breadcrumb" column="breadcrumb" jdbcType="INTEGER"/>
+        <result property="affix" column="affix" jdbcType="INTEGER"/>
+        <result property="enableDelete" column="enable_delete" jdbcType="INTEGER"/>
+        <result property="remark" column="remark" jdbcType="VARCHAR"/>
+        <result property="createAreaCode" column="create_area_code" jdbcType="VARCHAR"/>
+        <result property="createPositionCode" column="create_position_code" jdbcType="VARCHAR"/>
+        <result property="createOrgSysCode" column="create_org_sys_code" jdbcType="VARCHAR"/>
+        <result property="createSystemCode" column="create_system_code" jdbcType="VARCHAR"/>
+        <result property="createTenantId" column="create_tenant_id" jdbcType="VARCHAR"/>
+        <result property="createUserId" column="create_user_id" jdbcType="VARCHAR"/>
+        <result property="createUserName" column="create_user_name" jdbcType="VARCHAR"/>
+        <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
+        <result property="updateUserId" column="update_user_id" jdbcType="VARCHAR"/>
+        <result property="updateUserName" column="update_user_name" jdbcType="VARCHAR"/>
+        <result property="updateTime" column="update_time" jdbcType="TIMESTAMP"/>
+        <result property="delFlag" column="del_flag" jdbcType="INTEGER"/>
+    </resultMap>
+
+    <!--数据库字段-->
+    <sql id="Column_List">
+        permission_id, parent_id, title, path, component, path_name, redirect, permission_type, actions_uri, actions,
+        is_external, external_url, open_type, button_strategy, check_action_request, sort_no, icon_type, active_menu,
+        icon, always_show, hidden, permission_status, keep_alive, breadcrumb, affix, enable_delete, remark,
+        create_area_code, create_position_code, create_org_sys_code, create_system_code, create_tenant_id, permission_sys_code,
+        create_user_id, create_user_name, create_time, update_user_id, update_user_name, update_time, del_flag
+    </sql>
+
+    <!--数据库字段待别名-->
+    <sql id="Column_List_Ali">
+        ali.permission_id, ali.parent_id, ali.title, ali.path, ali.component, ali.path_name, ali.redirect,
+        ali.permission_type, ali.actions_uri, ali.actions, ali.is_external, ali.external_url, ali.open_type,
+        ali.button_strategy, ali.check_action_request, ali.sort_no, ali.icon_type, ali.active_menu, ali.icon,
+        ali.always_show, ali.hidden, ali.permission_status, ali.keep_alive, ali.breadcrumb, ali.affix, ali.permission_sys_code,
+        ali.enable_delete, ali.remark, ali.create_area_code, ali.create_position_code, ali.create_org_sys_code,
+        ali.create_system_code, ali.create_tenant_id, ali.create_user_id, ali.create_user_name, ali.create_time,
+        ali.update_user_id, ali.update_user_name, ali.update_time, ali.del_flag
+    </sql>
+
+    <!--数据库字段-->
+    <sql id="Column_List_Page_Ali">
+        ali.permission_id, ali.parent_id, ali.title, ali.path, ali.component, ali.path_name, ali.redirect,
+        ali.permission_type, ali.actions_uri, ali.actions, ali.is_external, ali.external_url, ali.open_type,
+        ali.button_strategy, ali.check_action_request, ali.sort_no, ali.icon_type, ali.active_menu, ali.icon,
+        ali.always_show, ali.hidden, ali.permission_status, ali.keep_alive, ali.breadcrumb, ali.affix, ali.permission_sys_code,
+        ali.enable_delete, ali.remark, ali.create_area_code, ali.create_position_code, ali.create_org_sys_code,
+        ali.create_system_code, ali.create_tenant_id, ali.create_user_id, ali.create_user_name, ali.create_time,
+        ali.update_user_id, ali.update_user_name, ali.update_time, ali.del_flag
+    </sql>
+
+
+    <!--通过实体作为筛选条件分页查询-->
+    <select id="pageByModel" resultType="indi.zxiaozhou.skillfull.auth.modules.rbac.service.dto.RbacPermissionPageDto">
+        SELECT
+        <include refid="Column_List"/>
+        FROM auth_rbac_permission
+        <where>
+            del_flag = 0
+            AND ( parent_id IS NULL OR parent_id = '' )
+            <if test="query.title != null and query.title != ''">
+                AND LOCATE(#{query.title, jdbcType=VARCHAR}, title) &gt; 0
+            </if>
+            <if test="query.permissionStatus != null">
+                AND permission_status = #{query.permissionStatus, jdbcType=INTEGER}
+            </if>
+            <if test="query.startTime != null">
+                AND create_time &gt;= #{query.startTime, jdbcType=TIMESTAMP}
+            </if>
+            <if test="query.endTime != null">
+                AND create_time &lt;= #{query.endTime, jdbcType=TIMESTAMP}
+            </if>
+        </where>
+    </select>
+
+
+    <!-- 获取按钮权限 -->
+    <select id="getActions" resultType="indi.zxiaozhou.skillfull.auth.modules.rbac.service.dto.ActionPermissionDto">
+        SELECT app.title    AS permission_name,
+               ap.title,
+               ap.parent_id AS permission_id,
+               ap.permission_status,
+               ap.permission_type,
+               ap.actions,
+               ap.actions_uri,
+               ap.button_strategy,
+               ap.check_action_request
+        FROM auth_rbac_permission ap,
+             auth_rbac_permission app
+        WHERE ap.parent_id = app.permission_id
+          AND ap.del_flag = 0
+          AND app.del_flag = 0
+          AND ap.permission_type = 2
+          AND ap.permission_status = 1
+          AND app.permission_status = 1
+        ORDER BY ap.sort_no
+    </select>
+
+
+    <!-- 通过权限id物理删除 -->
+    <delete id="physicalDeleteById">
+        DELETE
+        FROM auth_rbac_permission
+        WHERE permission_id = #{id, jdbcType=VARCHAR}
+    </delete>
+
+
+    <!-- 通过id逻辑删除 -->
+    <update id="deleteById">
+        UPDATE auth_rbac_permission
+        <set>
+            del_flag = 1,
+        </set>
+        WHERE permission_id = #{permissionId, jdbcType=VARCHAR}
+    </update>
+</mapper>
